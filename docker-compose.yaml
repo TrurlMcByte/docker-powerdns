@@ -19,8 +19,8 @@ services:
 #      - --slave=yes
       - --webserver=yes
       - --webserver-address=0.0.0.0
-      - --webserver-port=8051
-      - --webserver-allow-from=192.168.1.0/24
+      - --webserver-port=${WEB_PORT}
+      - --webserver-allow-from=${ALLOW_FROM}
       - --edns-subnet-processing=yes
       - --api=yes
       - --api-key=${API_KEY}
