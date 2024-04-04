@@ -1,13 +1,14 @@
 FROM debian:bullseye
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive \
-	   apt-get install -y --no-install-recommends pdns-server=4.3.1-2 pdns-backend-pgsql=4.3.1-2  \
+	&& apt-get install -y --no-install-recommends pdns-server pdns-backend-pgsql pdns-backend-lua2 pdns-tools \
 	&& rm -rf /etc/powerdns/pdns.d/* /var/lib/apt/lists/*
 
 COPY pdns.conf /etc/powerdns/
 COPY init /sbin/
 
-EXPOSE 53/tcp 53/udp
+EXPOSE 53/tcp 53/udp 8081/tcp
 
 ENTRYPOINT ["/sbin/init"]
