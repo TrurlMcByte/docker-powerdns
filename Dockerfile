@@ -10,7 +10,8 @@ RUN apt-get update \
     && chmod +x /usr/bin/yq
 
 # base config
-ENV PDNSSC_DAEMON=no \
+ENV HOME=/var/spool/powerdns \
+    PDNSSC_DAEMON=no \
     PDNSSC_SETUID=pdns \
     PDNSSC_SETGID=pdns \
     PDNSSC_CONFIG_DIR=/etc/powerdns \
