@@ -4,24 +4,14 @@ services:
     build: .
     container_name: powerdns
     image: trurlmcbyte/powerdns
-    environment:
-      - PGSQL_HOST=${PGSQL_HOST}
-      - PGSQL_PORT=${PGSQL_PORT}
-      - PGSQL_DATABASE=${PGSQL_DATABASE}
-      - PGSQL_USERNAME=${PGSQL_USERNAME}
-      - PGSQL_PASSWORD=${PGSQL_PASSWORD}
-      - PGSQL_DNSSEC=${PGSQL_DNSSEC}
+    env_file:
+      - .env
+#    environment:
+#      - PGSQL_HOST=${PGSQL_HOST}
+#      - PGSQL_PORT=${PGSQL_PORT}
     ports:
       - "8053:53/udp"
       - "8053:53/tcp"
       - "8051:8051/tcp"
-    command:
-#      - --slave=yes
-      - --webserver=yes
-      - --webserver-address=0.0.0.0
-      - --webserver-port=${WEB_PORT}
-      - --webserver-allow-from=${ALLOW_FROM}
-      - --edns-subnet-processing=yes
-      - --api=yes
-      - --api-key=${API_KEY}
+
 # docker run -v ./ex:/ex halkeye/powerdns zone2sql --zone=/ex/voletcard.com --gpgsql

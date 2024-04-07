@@ -6,35 +6,14 @@ if [ -n "$DEBUG_STARTUP" ]; then
 	set -x
 fi
 
+printenv | grep PDNSSC_ | yq  -pp \
+        '. | with_entries(.key |= (sub("^PDNSSC_","") | sub("_PLUS$","+") | downcase | sub("[._]","-"))) | .. | select(tag != "!!map" and tag != "!!seq") | ( (path | join("-")) + "=" + .)' \
+         > /etc/powerdns/pdns.conf
+
 # --help, --version
 [ "$1" = "--help" ] || [ "$1" = "--version" ] && exec pdns_server $1
 # treat everything except -- as exec cmd
 [ "${1:0:2}" != "--" ] && exec "$@"
-
-# Set PgSQL config
-if [ -n "$PGSQL_HOST" ]; then
-	sed -r -i "s/^[# ]*gpgsql-host=.*/gpgsql-host=${PGSQL_HOST}/g"             /etc/powerdns/pdns.conf
-fi
-
-if [ -n "$PGSQL_PORT" ]; then
-	sed -r -i "s/^[# ]*gpgsql-port=.*/gpgsql-port=${PGSQL_PORT}/g"             /etc/powerdns/pdns.conf
-fi
-
-if [ -n "$PGSQL_USERNAME" ]; then
-	sed -r -i "s/^[# ]*gpgsql-user=.*/gpgsql-user=${PGSQL_USERNAME}/g"         /etc/powerdns/pdns.conf
-fi
-
-if [ -n "$PGSQL_PASSWORD" ]; then
-	sed -r -i "s/^[# ]*gpgsql-password=.*/gpgsql-password=${PGSQL_PASSWORD}/g" /etc/powerdns/pdns.conf
-fi
-
-if [ -n "$PGSQL_DATABASE" ]; then
-	sed -r -i "s/^[# ]*gpgsql-dbname=.*/gpgsql-dbname=${PGSQL_DATABASE}/g"     /etc/powerdns/pdns.conf
-fi
-
-if [ -n "$PGSQL_DNSSEC" ]; then
-	sed -r -i "s/^[# ]*gpgsql-dnssec=.*/gpgsql-dnssec=${PGSQL_DNSSEC}/g"       /etc/powerdns/pdns.conf
-fi
 
 unset -v PGSQL_PASSWORD
 
@@ -58,3 +37,4 @@ done
 echo "CAN'T HAPPEN: DROPPED OUT OF INFINITE LOOP" >&2
 exit 42
 
+#yq '. *= load("conf.yaml") | ..  | select(tag != "!!map" and tag != "!!seq") | ( (path | join("-")) + "=" + .)' base.yaml
