@@ -14,16 +14,13 @@ ENV PDNSSC_DAEMON=no \
     PDNSSC_SETUID=pdns \
     PDNSSC_SETGID=pdns \
     PDNSSC_CONFIG_DIR=/etc/powerdns \
-    PDNSSC_CACHE_TTL=60 \
     PDNSSC_GUARDIAN=yes \
-    PDNSSC_LOCAL_ADDRESS=0.0.0.0 \
-    PDNSSC_LOCAL_PORT=53 \
     PDNSSC_LOGLEVEL=4 \
     PDNSSC_MASTER=yes \
     PDNSSC_SOCKET_DIR=/var/run \
     PDNSSC_VERSION_STRING=powerdns
 
-#    PDNSSC_LAUNCH="" 
+#    PDNSSC_LAUNCH=""
 
 #COPY pdns.conf /etc/powerdns/
 COPY init /sbin/
